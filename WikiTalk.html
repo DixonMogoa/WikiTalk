@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Pediatrics Data Standardization | Prognosis & Diagnosis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #a5b4fc 0%, #818cf8 50%, #6366f1 100%);
+        }
+        .sidebar-item:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+        .data-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .pulse-animation {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div class="flex h-screen overflow-hidden">
+        <!-- Sidebar -->
+        <div class="hidden md:flex md:flex-shrink-0">
+            <div class="flex flex-col w-64 gradient-bg text-white">
+                <div class="flex items-center justify-center h-16 px-4 border-b border-indigo-300">
+                    <div class="flex items-center">
+                        <i class="fas fa-baby text-2xl mr-2"></i>
+                        <span class="text-xl font-semibold">PediAI</span>
+                    </div>
+                </div>
+                <div class="flex flex-col flex-grow px-4 py-4 overflow-y-auto">
+                    <div class="space-y-1">
+                        <a href="#" class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-white bg-indigo-700">
+                            <i class="fas fa-home mr-3"></i>
+                            Dashboard
+                        </a>
+                        <a href="#" class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75">
+                            <i class="fas fa-user-injured mr-3"></i>
+                            Patient Records
+                        </a>
+                        <a href="#" class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75">
+                            <i class="fas fa-vial mr-3"></i>
+                            Lab Analysis
+                        </a>
+                        <a href="#" class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            Growth Metrics
+                        </a>
+                        <a href="#" class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75">
+                            <i class="fas fa-pills mr-3"></i>
+                            Medication
+                        </a>
+                        <a href="#" class="flex items-center px-2 py-3 text-sm font-medium rounded-md text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75">
+                            <i class="fas fa-cog mr-3"></i>
+                            Settings
+                        </a>
+                    </div>
+                    <div class="mt-auto mb-4">
+                        <div class="bg-indigo-700 bg-opacity-50 p-3 rounded-lg">
+                            <p class="text-xs text-indigo-100">AI Model Version: 2.4.1</p>
+                            <p class="text-xs text-indigo-100">Last Updated: Today</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Top Navigation -->
+            <div class="flex items-center justify-between h-16 px-4 border-b bg-white">
+                <div class="flex items-center">
+                    <button class="md:hidden text-gray-500 focus:outline-none">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                    <h1 class="ml-4 text-xl font-semibold text-gray-800">AI Pediatrics Data Standardization</h1>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="relative">
+                        <button class="p-1 text-gray-400 rounded-full hover:text-gray-500 focus:outline-none">
+                            <i class="fas fa-bell"></i>
+                        </button>
+                        <span class="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
+                    </div>
+                    <div class="relative">
+                        <button class="flex items-center space-x-2 text-sm focus:outline-none">
+                            <img class="w-8 h-8 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="User profile">
+                            <span class="text-gray-700">Dr. Smith</span>
+                            <i class="fas fa-chevron-down text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="flex-1 overflow-auto p-6 bg-gray-50">
+                <!-- Welcome Banner -->
+                <div class="gradient-bg text-white rounded-xl p-6 mb-6 shadow-lg">
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center">
+                        <div>
+                            <h2 class="text-2xl font-bold mb-2">Welcome to PediAI</h2>
+                            <p class="max-w-2xl">Our AI-powered pediatric data standardization model helps you make accurate diagnoses and prognoses with standardized data inputs and machine learning analysis.</p>
+                        </div>
+                        <button class="mt-4 md:mt-0 bg-white text-indigo-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition duration-200">
+                            <i class="fas fa-play mr-2"></i> Watch Tutorial
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Stats -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-white p-6 rounded-xl shadow data-card transition duration-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Active Patients</p>
+                                <p class="text-2xl font-bold text-indigo-600">142</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-procedures"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-green-500">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>12% from last month</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow data-card transition duration-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">AI Accuracy</p>
+                                <p class="text-2xl font-bold text-indigo-600">94.7%</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-brain"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-green-500">
+                                <i class="fas fa-arrow-up mr-1"></i>
+                                <span>2.3% improvement</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow data-card transition duration-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Standardized Fields</p>
+                                <p class="text-2xl font-bold text-indigo-600">187</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-database"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-green-500">
+                                <i class="fas fa-plus mr-1"></i>
+                                <span>15 new this month</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow data-card transition duration-200">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-sm font-medium text-gray-500">Avg. Diagnosis Time</p>
+                                <p class="text-2xl font-bold text-indigo-600">23m</p>
+                            </div>
+                            <div class="p-3 rounded-full bg-indigo-100 text-indigo-600">
+                                <i class="fas fa-stopwatch"></i>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <div class="flex items-center text-sm text-red-500">
+                                <i class="fas fa-arrow-down mr-1"></i>
+                                <span>5m faster</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Main Content Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Patient Input Form -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-white rounded-xl shadow overflow-hidden">
+                            <div class="px-6 py-4 border-b border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900">Patient Data Standardization</h3>
+                                <p class="mt-1 text-sm text-gray-500">Enter standardized pediatric data for AI analysis</p>
+                            </div>
+                            <div class="px-6 py-4">
+                                <div class="space-y-4">
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700">Patient ID</label>
+                                            <input type="text" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700">Age (months)</label>
+                                            <input type="number" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Weight (kg)</label>
+                                        <input type="number" step="0.1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Height (cm)</label>
+                                        <input type="number" step="0.1" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Symptoms</label>
+                                        <div class="mt-2 space-y-2">
+                                            <div class="flex items-center">
+                                                <input id="fever" name="symptoms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                <label for="fever" class="ml-3 block text-sm font-medium text-gray-700">Fever</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="cough" name="symptoms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                <label for="cough" class="ml-3 block text-sm font-medium text-gray-700">Cough</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="rash" name="symptoms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                <label for="rash" class="ml-3 block text-sm font-medium text-gray-700">Rash</label>
+                                            </div>
+                                            <div class="flex items-center">
+                                                <input id="vomiting" name="symptoms" type="checkbox" class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+                                                <label for="vomiting" class="ml-3 block text-sm font-medium text-gray-700">Vomiting</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700">Additional Notes</label>
+                                        <textarea rows="3" class="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                                    </div>
+                                    <div class="flex justify-end space-x-3">
+                                        <button type="button" class="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                            Cancel
+                                        </button>
+                                        <button type="button" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 pulse-animation">
+                                            <i class="fas fa-brain mr-2"></i> Run AI Analysis
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- AI Analysis Results -->
+                    <div>
+                        <div class="bg-white rounded-xl shadow overflow-hidden h-full">
+                            <div class="px-6 py-4 border-b border-gray-200">
+                                <h3 class="text-lg font-medium text-gray-900">AI Diagnosis & Prognosis</h3>
+                                <p class="mt-1 text-sm text-gray-500">Results from standardized data analysis</p>
+                            </div>
+                            <div class="px-6 py-4">
+                                <div class="space-y-6">
+                                    <div>
+                                        <h4 class="text-md font-medium text-gray-900 mb-2">Most Likely Diagnosis</h4>
+                                        <div class="bg-indigo-50 border-l-4 border-indigo-400 p-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-diagnoses text-indigo-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm text-indigo-700 font-medium">Viral Upper Respiratory Infection</p>
+                                                    <p class="text-sm text-indigo-600 mt-1">Confidence: 87%</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-md font-medium text-gray-900 mb-2">Differential Diagnoses</h4>
+                                        <div class="space-y-2">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 h-5 w-5 text-yellow-500 mt-0.5">
+                                                    <i class="fas fa-circle"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Otitis Media</p>
+                                                    <p class="text-sm text-gray-500">Confidence: 62%</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 h-5 w-5 text-yellow-500 mt-0.5">
+                                                    <i class="fas fa-circle"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Allergic Rhinitis</p>
+                                                    <p class="text-sm text-gray-500">Confidence: 45%</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 h-5 w-5 text-yellow-500 mt-0.5">
+                                                    <i class="fas fa-circle"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Bronchiolitis</p>
+                                                    <p class="text-sm text-gray-500">Confidence: 38%</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-md font-medium text-gray-900 mb-2">Prognosis</h4>
+                                        <div class="bg-green-50 border-l-4 border-green-400 p-4">
+                                            <div class="flex">
+                                                <div class="flex-shrink-0">
+                                                    <i class="fas fa-chart-line text-green-400"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm text-green-700 font-medium">Excellent prognosis with symptomatic treatment</p>
+                                                    <p class="text-sm text-green-600 mt-1">Expected recovery: 7-10 days</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h4 class="text-md font-medium text-gray-900 mb-2">Recommended Actions</h4>
+                                        <div class="space-y-2">
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 h-5 w-5 text-indigo-500 mt-0.5">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Hydration monitoring</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 h-5 w-5 text-indigo-500 mt-0.5">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Acetaminophen for fever (10-15mg/kg every 4-6h)</p>
+                                                </div>
+                                            </div>
+                                            <div class="flex items-start">
+                                                <div class="flex-shrink-0 h-5 w-5 text-indigo-500 mt-0.5">
+                                                    <i class="fas fa-check-circle"></i>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <p class="text-sm font-medium text-gray-900">Follow-up if symptoms worsen or persist beyond 10 days</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Growth Charts Section -->
+                <div class="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Weight-for-Age Percentile</h3>
+                            <div class="relative">
+                                <select class="appearance-none bg-gray-100 border border-gray-300 text-gray-700 py-1 px-3 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+                                    <option>Last 6 months</option>
+                                    <option>Last year</option>
+                                    <option>All time</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="weightChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="bg-white p-6 rounded-xl shadow">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-lg font-medium text-gray-900">Height-for-Age Percentile</h3>
+                            <div class="relative">
+                                <select class="appearance-none bg-gray-100 border border-gray-300 text-gray-700 py-1 px-3 pr-8 rounded-md leading-tight focus:outline-none focus:bg-white focus:border-indigo-500">
+                                    <option>Last 6 months</option>
+                                    <option>Last year</option>
+                                    <option>All time</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                                    <i class="fas fa-chevron-down"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="h-64">
+                            <canvas id="heightChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Weight Chart
+        const weightCtx = document.getElementById('weightChart').getContext('2d');
+        const weightChart = new Chart(weightCtx, {
+            type: 'line',
+            data: {
+                labels: ['0m', '1m', '2m', '3m', '4m', '5m', '6m'],
+                datasets: [
+                    {
+                        label: 'Patient Weight',
+                        data: [3.2, 4.5, 5.1, 5.8, 6.4, 6.9, 7.3],
+                        borderColor: '#6366f1',
+                        backgroundColor: 'rgba(99, 102, 241, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '50th Percentile',
+                        data: [3.3, 4.5, 5.6, 6.4, 7.0, 7.5, 7.9],
+                        borderColor: '#9ca3af',
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' kg';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Weight (kg)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Height Chart
+        const heightCtx = document.getElementById('heightChart').getContext('2d');
+        const heightChart = new Chart(heightCtx, {
+            type: 'line',
+            data: {
+                labels: ['0m', '1m', '2m', '3m', '4m', '5m', '6m'],
+                datasets: [
+                    {
+                        label: 'Patient Height',
+                        data: [50, 54, 58, 61, 64, 66, 68],
+                        borderColor: '#10b981',
+                        backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                        borderWidth: 2,
+                        tension: 0.3,
+                        fill: true
+                    },
+                    {
+                        label: '50th Percentile',
+                        data: [50, 54, 58, 61, 64, 67, 69],
+                        borderColor: '#9ca3af',
+                        borderWidth: 1,
+                        borderDash: [5, 5],
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.dataset.label + ': ' + context.parsed.y + ' cm';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        title: {
+                            display: true,
+                            text: 'Height (cm)'
+                        }
+                    },
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Age'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Simulate AI analysis button click
+        document.querySelector('.pulse-animation').addEventListener('click', function() {
+            // Show loading state
+            this.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Analyzing...';
+            this.classList.remove('pulse-animation');
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                this.innerHTML = '<i class="fas fa-check mr-2"></i> Analysis Complete';
+                this.classList.add('bg-green-600', 'hover:bg-green-700');
+                
+                // Show success notification
+                const notification = document.createElement('div');
+                notification.className = 'fixed bottom-4 right-4 bg-green-100 border-l-4 border-green-500 text-green-700 p-4 shadow-lg rounded-lg';
+                notification.innerHTML = '<div class="flex items-center"><i class="fas fa-check-circle mr-2"></i> <span>AI analysis completed successfully!</span></div>';
+                document.body.appendChild(notification);
+                
+                // Remove notification after 5 seconds
+                setTimeout(() => {
+                    notification.remove();
+                }, 5000);
+                
+                // Reset button after 3 seconds
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-brain mr-2"></i> Run AI Analysis';
+                    this.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    this.classList.add('pulse-animation');
+                }, 3000);
+            }, 2000);
+        });
+    </script>
+</body>
+</html>
